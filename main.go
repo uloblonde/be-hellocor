@@ -19,6 +19,8 @@ func main() {
 		AllowHeaders: []string{"X-Requested-With", "Content-Type", "Authorization"},
 	}))
 
+	e.Static("/uploads", "./uploads")
+
 	mysql.DatabaseInit()
 	database.RunMigrations()
 	routes.RouteInit(e.Group("/halo/v1"))
