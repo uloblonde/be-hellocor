@@ -16,7 +16,7 @@ func ArticleRoute(e *echo.Group) {
 	// e.GET("/artuser/:id", h.DapatCatId)
 	e.GET("/CariArticle", h.CariArticle)
 	e.GET("/article/:id", h.DapatArticle)
-	e.POST("/buatarticle/:id", middleware.UploadFile(h.MembuatArticle))
+	e.POST("/buatarticle/:id", middleware.Auth(middleware.UploadFile(h.MembuatArticle)))
 	e.PATCH("/article/:id", middleware.Auth(middleware.UploadFile(h.UpdateArticle)))
 	e.DELETE("/article/:id", middleware.Auth(h.HapusArticle))
 }

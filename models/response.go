@@ -7,8 +7,9 @@ type Response struct {
 	UserId       int
 	User         User
 	ConsulId     int
-	ResponseText string `json:"responseText" gorm:"type: varchar(255)" `
-	ConsulLink   string `json:"consulLink" gorm:"type: varchar(255)"`
+	Consulting   Consulting `gorm:"foreignKey:ConsulId"`
+	ResponseText string     `json:"responseText" gorm:"type: varchar(255)" `
+	ConsulLink   string     `json:"consulLink" gorm:"type: varchar(255)"`
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 }

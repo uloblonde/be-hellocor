@@ -1,19 +1,21 @@
 package handlers
 
 import (
+	"context"
 	"fmt"
 	articledto "halocorona/dto/article"
 	dto "halocorona/dto/result"
 	"halocorona/models"
 	"halocorona/repositories"
 	"net/http"
+	"os"
 	"strconv"
 
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )
-
-var path_file = "http://localhost:5000/uploads/"
 
 type handlerArticle struct {
 	ArticleRepository repositories.ArticleRepository
@@ -30,10 +32,6 @@ func (h *handlerArticle) CariArticle(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
 	}
 
-	for i, m := range article {
-		article[i].ThumbnailArticle = path_file + m.ThumbnailArticle
-	}
-
 	return c.JSON(http.StatusOK, article)
 }
 
@@ -44,7 +42,6 @@ func (h *handlerArticle) DapatArticle(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
 	}
-	article.ThumbnailArticle = path_file + article.ThumbnailArticle
 
 	return c.JSON(http.StatusOK, dto.SuccesResult{Code: http.StatusOK, Data: convertResArticle(article)})
 }
@@ -75,8 +72,23 @@ func (h *handlerArticle) MembuatArticle(c echo.Context) error {
 		Description:      c.FormValue("description"),
 	}
 
+	var ctx = context.Background()
+	var CLOUD_NAME = os.Getenv("CLOUD_NAME")
+	var API_KEY = os.Getenv("API_KEY")
+	var API_SECRET = os.Getenv("API_SECRET")
+
+	// Add your Cloudinary credentials ...
+	cld, _ := cloudinary.NewFromParams(CLOUD_NAME, API_KEY, API_SECRET)
+
+	// Upload file to Cloudinary ...
+	resp, err := cld.Upload.Upload(ctx, dataFile, uploader.UploadParams{Folder: "halocorona"})
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
 	validation := validator.New()
-	err := validation.Struct(meminta)
+	err = validation.Struct(meminta)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
 	}
@@ -84,7 +96,7 @@ func (h *handlerArticle) MembuatArticle(c echo.Context) error {
 
 	article := models.Article{
 		Title:            meminta.Title,
-		ThumbnailArticle: meminta.ThumbnailArticle,
+		ThumbnailArticle: resp.SecureURL,
 		UserId:           meminta.UserId,
 		Description:      meminta.Description,
 	}

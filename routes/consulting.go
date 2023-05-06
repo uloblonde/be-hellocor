@@ -17,4 +17,6 @@ func ConsultingRoutes(e *echo.Group) {
 	e.GET("/consulting/:id", middleware.Auth(h.DapatConsulting))
 	e.GET("/consultings/:id", h.CariConsultingKu)
 	e.GET("/consultings", h.DapatConsul)
+	e.PATCH("/consultation/:id", h.SuccesConsulting)
+	e.PATCH("/consultation-reject/:id", h.RejectConsulting)
 }
