@@ -65,3 +65,14 @@ func (h *handlerResponse) DapatResponse(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, dto.SuccesResult{Code: http.StatusOK, Data: response})
 }
+
+func (h *handlerResponse) DapatResponseByConsul(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	response, err := h.ResponseRepository.DapatResponseByConsul(uint(id))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, dto.SuccesResult{Code: http.StatusOK, Data: response})
+}
