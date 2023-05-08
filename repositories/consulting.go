@@ -11,7 +11,7 @@ type ConsultingRepository interface {
 	DapatConsul() ([]models.Consulting, error)
 	MembuatConsulting(article models.Consulting) (models.Consulting, error)
 	DapatConsulting(Id uint) (models.Consulting, error)
-	EditConsulting(article models.Consulting) (models.Consulting, error)
+	EditConsulting(id uint, status string) (models.Consulting, error)
 }
 
 func RepositoryConsulting(db *gorm.DB) *repo { //function Repository mengambil parameter berupa pointer ke gorm dan mengembalikan pointer ke repo
@@ -38,7 +38,14 @@ func (r *repo) DapatConsul() ([]models.Consulting, error) {
 	return consul, err
 }
 
-func (r *repo) EditConsulting(consul models.Consulting) (models.Consulting, error) {
-	err := r.db.Save(&consul).Error
-	return consul, err
+func (r *repo) EditConsulting(id uint, status string) (models.Consulting, error) {
+	var consultation models.Consulting
+	if err := r.db.First(&consultation, id).Error; err != nil {
+		return consultation, err
+	}
+	consultation.Status = status
+	if err := r.db.Save(&consultation).Error; err != nil {
+		return consultation, err
+	}
+	return consultation, nil
 }

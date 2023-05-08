@@ -112,19 +112,9 @@ func (h *handlerConsulting) MembuatConsulting(c echo.Context) error {
 }
 
 func (h *handlerConsulting) SuccesConsulting(c echo.Context) error {
-	var err error
-
 	id, _ := strconv.Atoi(c.Param("id"))
 
-	consultation, err := h.ConsultingRepository.DapatConsulting(uint(id))
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
-	}
-
-	consultation.Status = "success"
-
-	data, err := h.ConsultingRepository.EditConsulting(consultation)
+	data, err := h.ConsultingRepository.EditConsulting(uint(id), "success")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()})
 	}
@@ -133,22 +123,12 @@ func (h *handlerConsulting) SuccesConsulting(c echo.Context) error {
 }
 
 func (h *handlerConsulting) RejectConsulting(c echo.Context) error {
-	var err error
-
 	id, _ := strconv.Atoi(c.Param("id"))
 
-	consultation, err := h.ConsultingRepository.DapatConsulting(uint(id))
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
-	}
-
-	consultation.Status = "reject"
-
-	data, err := h.ConsultingRepository.EditConsulting(consultation)
-
+	data, err := h.ConsultingRepository.EditConsulting(uint(id), "reject")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()})
 	}
+
 	return c.JSON(http.StatusOK, dto.SuccesResult{Code: http.StatusOK, Data: data})
 }
