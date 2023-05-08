@@ -5,6 +5,7 @@ import (
 	"halocorona/database"
 	"halocorona/pkg/mysql"
 	"halocorona/routes"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -27,10 +28,12 @@ func main() {
 
 	e.Static("/uploads", "./uploads")
 
+	var PORT = os.Getenv("PORT")
+
 	mysql.DatabaseInit()
 	database.RunMigrations()
 	routes.RouteInit(e.Group("/halo/v1"))
 
-	fmt.Println("Server running on localhost:5000")
-	e.Logger.Fatal(e.Start("localhost:5000"))
+	fmt.Println("server running localhost: " + PORT)
+	e.Logger.Fatal(e.Start(":" + PORT))
 }
