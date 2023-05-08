@@ -67,7 +67,7 @@ func (h *handlerArticle) MembuatArticle(c echo.Context) error {
 
 	meminta := articledto.CreatedArticleRequest{
 		Title:            c.FormValue("title"),
-		UserId:           id,
+		UserId:           int(id),
 		ThumbnailArticle: dataFile,
 		Description:      c.FormValue("description"),
 	}
@@ -106,6 +106,8 @@ func (h *handlerArticle) MembuatArticle(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
 	}
+	article, _ = h.ArticleRepository.DapatArticle(article.Id)
+
 	return c.JSON(http.StatusOK, dto.SuccesResult{Code: http.StatusOK, Data: convertResArticle(data)})
 }
 
@@ -164,9 +166,13 @@ func (h *handlerArticle) HapusArticle(c echo.Context) error {
 func convertResArticle(u models.Article) articledto.ArticleResponse {
 	return articledto.ArticleResponse{
 		Id:               u.Id,
+		UserId:           u.UserId,
+		User:             u.User,
 		Title:            u.Title,
 		ThumbnailArticle: u.ThumbnailArticle,
 		Description:      u.Description,
+		CreatedAt:        u.CreatedAt,
+		UpdatedAt:        u.UpdatedAt,
 	}
 }
 func convertDeleteArticle(u models.Article) articledto.ArticleDeleteResponse {

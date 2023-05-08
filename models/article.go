@@ -5,7 +5,7 @@ import "time"
 type Article struct {
 	Id               int    `json:"id" gorm:"primary_key:auto_increment"`
 	Title            string `json:"title" gorm:"type: varchar(255)" `
-	User             User
+	User             User   `json:"User"`
 	UserId           int    `json:"userId"`
 	ThumbnailArticle string `json:"thumbnailArticle" gorm:"type: varchar(255)" `
 	Description      string `json:"description" gorm:"type: varchar(255)" `
