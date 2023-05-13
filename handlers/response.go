@@ -76,3 +76,13 @@ func (h *handlerResponse) DapatResponseByConsul(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, dto.SuccesResult{Code: http.StatusOK, Data: response})
 }
+
+func (h *handlerResponse) DapatSemuaResponse(c echo.Context) error {
+	response, err := h.ResponseRepository.DapatSemuaResponse()
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, dto.SuccesResult{Code: http.StatusOK, Data: response})
+}

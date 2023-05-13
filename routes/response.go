@@ -16,4 +16,5 @@ func ResponseRoutes(e *echo.Group) {
 	e.POST("/response/:id", middleware.Auth(h.MembuatResponse))
 	e.GET("/response/:id", h.DapatResponse)
 	e.GET("/responseku/:id", h.DapatResponseByConsul)
+	e.GET("/responseall", h.DapatSemuaResponse)
 }

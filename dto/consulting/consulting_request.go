@@ -14,4 +14,5 @@ type CreateConsultingRequest struct {
 	Subject        string    `json:"subject" `
 	LiveConsulting time.Time `json:"liveConsul"`
 	Description    string    `json:"description" `
+	CreatedAt      time.Time
 }
